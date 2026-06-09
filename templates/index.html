@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CSV Statistical Analyzer</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="page">
+    <h1>CSV Statistical Analyzer</h1>
+    <p class="subtitle">Drag and drop a .csv file to begin.</p>
+
+    <div id="drop-zone" class="drop-zone">
+      <input id="file-input" type="file" accept=".csv" hidden />
+      <span>Drop CSV here or click to choose a file</span>
+    </div>
+
+  <div id="status" class="status"></div>
+
+    <!-- Tab shell — hidden until a file is uploaded -->
+    <div id="tabs-container" class="tabs-container hidden">
+
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="analyzer">Analyzer</button>
+        <button class="tab-btn"        data-tab="visualizer">Visualizer</button>
+      </div>
+
+      <!-- ── Analyzer tab ── -->
+      <div id="tab-analyzer" class="tab-content active">
+
+        <div id="loading" class="tab-loading" style="display:none">
+          Computing stuff...
+        </div>
+
+        <div id="heatmap-content"></div>
+        <div id="stats-table"></div>
+      </div>
+
+      <!-- ── Visualizer tab ── -->
+      <div id="tab-visualizer" class="tab-content">
+        <div id="visualizer-body" class="visualizer-body"></div>
+      </div>
+
+    </div><!-- /tabs-container -->
+  </div>
+
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script src="/static/script.js"></script>
+</body>
+</html>

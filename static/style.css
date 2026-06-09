@@ -1,0 +1,520 @@
+/* ── Google Font (Geist Mono for numbers, clean sans for UI) ── */
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
+
+/* ── Base ────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root {
+    --cell-size: 45px;
+}
+
+body {
+  margin: 0;
+  font-family: 'DM Sans', Arial, sans-serif;
+  background: #f0f0f0;
+  color: #111114;
+}
+
+.page {
+  max-width: 1360px;
+  margin: 44px auto;
+  padding: 0 24px 60px;
+}
+
+h1 {
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+  color: #111114;
+}
+
+.subtitle {
+  margin: 0 0 24px;
+  color: #52525b;
+  font-size: 0.9rem;
+}
+
+/* ── Drop-zone ───────────────────────────────────────────────── */
+.drop-zone {
+  border: 2px dashed #c4c4cc;
+  border-radius: 14px;
+  padding: 56px 20px;
+  text-align: center;
+  cursor: pointer;
+  background: #e4e4e7;
+  color: #52525b;
+  font-size: 0.9rem;
+  transition: border-color 0.18s, background 0.18s, color 0.18s;
+}
+
+.drop-zone:hover {
+  border-color: #71717a;
+  color: #3f3f46;
+}
+
+.drop-zone.dragover {
+  border-color: #3b82f6;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.status {
+  margin-top: 14px;
+  min-height: 22px;
+  color: #71717a;
+  font-size: 0.83rem;
+}
+
+/* ── Utility ─────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── Tab shell ───────────────────────────────────────────────── */
+.tabs-container {
+  margin-top: 36px;
+}
+
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #e4e4e7;
+  margin-bottom: 0;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: #71717a;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 9px 22px 10px;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: color 0.15s, border-color 0.15s;
+}
+
+.tab-btn:hover { color: #111114; }
+
+.tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #3b82f6;
+}
+
+.tab-content          { display: none; padding-top: 28px; }
+.tab-content.active   { display: block; }
+
+/* ── Shared loading state ────────────────────────────────────── */
+.tab-loading {
+  color: #52525b;
+  font-size: 0.85rem;
+  padding: 48px 0;
+}
+
+/* ── Visualizer tab ──────────────────────────────────────────── */
+.visualizer-body { width: 100%; }
+
+.result-frame {
+  width: 100%;
+  height: 800px;
+  border: none;
+  border-radius: 10px;
+  background: white;
+  display: block;
+}
+
+/* ── Analyzer: section headings ──────────────────────────────── */
+.section-title {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #71717a;
+}
+
+.section-sub {
+  margin: 0 0 18px;
+  font-size: 0.78rem;
+  color: #71717a;
+}
+
+/* ── Scale bar ───────────────────────────────────────────────── */
+.scale-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.scale-label {
+  font-size: 0.73rem;
+  color: #71717a;
+  white-space: nowrap;
+  font-family: 'Geist Mono', monospace;
+}
+
+.scale-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 200px;
+}
+
+.scale-bar {
+  height: 10px;
+  border-radius: 5px;
+  border: 1px solid #e4e4e7;
+  width: 100%;
+}
+
+.scale-ticks {
+  display: flex;
+  justify-content: space-between;
+}
+
+.scale-ticks span {
+  font-size: 0.65rem;
+  color: #71717a;
+  font-family: 'Geist Mono', monospace;
+}
+
+/* ── Heatmap scroll wrapper ──────────────────────────────────── */
+.heatmap-scroll {
+  overflow: auto;
+  max-height: 78vh;
+  border-radius: 12px;
+  border: 1px solid #e4e4e7;
+  background: #ffffff;
+}
+
+
+.heatmap-table th,
+.heatmap-table td {
+  width: var(--cell-size);
+  min-width: var(--cell-size);
+  max-width: var(--cell-size);
+  padding: 0;
+}
+
+/* Row labels: narrower and smaller */
+.row-header {
+  width: 110px !important;
+  min-width: 110px !important;
+  max-width: 110px !important;
+  padding-right: 6px;
+  font-size: 0.66rem;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Column headers: give room for rotated text */
+.col-header {
+  width: var(--cell-size);
+  min-width: var(--cell-size);
+  max-width: var(--cell-size);
+  height: 120px;
+  vertical-align: bottom;
+  padding: 0;
+  overflow: visible;
+}
+
+.col-header span {
+  display: inline-block;
+  transform: rotate(-45deg);
+  transform-origin: bottom left;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+
+/* ── Heat cells ──────────────────────────────────────────────── */
+.heat-cell {
+  width: 45px;
+  min-width: 45px;
+  max-width: 45px;
+  height: 45px;
+  border: 0.5px solid rgba(0, 0, 0, 0.04);
+  border-radius: 0;
+  text-align: center;
+  vertical-align: middle;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  transform-origin: center center;
+  outline: none;
+}
+
+.heat-cell:hover {
+  filter: brightness(0.96);
+}
+
+.heat-cell.active {
+  transform: scale(1.55);
+  z-index: 20;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  border-radius: 8px;
+  outline: 2px solid rgba(59, 130, 246, 0.6);
+}
+
+/* ── Heatmap details panel ───────────────────────────────────── */
+.heatmap-details {
+  grid-column: 1 / span 2;
+  grid-row: 3;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.heatmap-details-empty {
+  color: #71717a;
+  font-size: 0.82rem;
+}
+
+.heatmap-details-header {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #111114;
+}
+
+.heatmap-details-meta,
+.heatmap-details-hint {
+  font-size: 0.78rem;
+  color: #71717a;
+}
+
+.heatmap-details-label {
+  font-size: 0.8rem;
+  color: #52525b;
+}
+
+.heatmap-details-input {
+  width: 100%;
+  resize: vertical;
+  min-height: 92px;
+  border-radius: 10px;
+  border: 1px solid #e4e4e7;
+  background: #f8f8fa;
+  color: #111114;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 0.84rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.heatmap-details-input:focus {
+  border-color: #3b82f6;
+}
+
+.heatmap-details-close {
+  justify-self: start;
+  border: 1px solid #e4e4e7;
+  background: #f4f4f5;
+  color: #3f3f46;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.heatmap-details-close:hover {
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+/* ── Heat detail modal ───────────────────────────────────────── */
+.heat-detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.heat-detail-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.heat-detail-panel {
+  position: fixed;
+  left: var(--start-left);
+  top: var(--start-top);
+  width: var(--start-width);
+  height: var(--start-height);
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #e4e4e7;
+  background: #ffffff;
+  color: #111114;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.14);
+  overflow: hidden;
+  transition:
+    left 0.24s ease,
+    top 0.24s ease,
+    width 0.24s ease,
+    height 0.24s ease,
+    transform 0.24s ease;
+}
+
+.heat-detail-panel.expanded {
+  left: var(--target-left);
+  top: var(--target-top);
+  width: var(--target-width);
+  height: var(--target-height);
+}
+
+.heat-detail-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.heat-detail-meta h4 {
+  margin: 3px 0 0;
+  font-size: 1rem;
+  color: #111114;
+}
+
+.heat-detail-eyebrow {
+  font-size: 0.72rem;
+  color: #71717a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heat-detail-coefficient {
+  font-family: 'Geist Mono', monospace;
+  font-size: 1.1rem;
+  color: #2563eb;
+  white-space: nowrap;
+}
+
+.heat-detail-close {
+  border: 1px solid #e4e4e7;
+  background: #f4f4f5;
+  color: #3f3f46;
+  border-radius: 999px;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.heat-detail-close:hover {
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+
+.heat-detail-graph {
+  flex: 1;
+  min-height: 0;
+  border-radius: 12px;
+  border: 1px solid #e4e4e7;
+  background: #fafafa;
+  overflow: hidden;
+  padding: 10px;
+}
+
+.heat-detail-graph iframe,
+.heat-detail-graph .js-plotly-plot {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Statistics table ───────────────────────────────────────── */
+#stats-table {
+  margin-top: 36px;
+}
+
+.stats-table-scroll {
+  overflow: auto;
+  max-height: 70vh;
+  border-radius: 12px;
+  border: 1px solid #e4e4e7;
+  background: #ffffff;
+}
+
+.stats-table th,
+.stats-table td {
+  border-bottom: 1px solid #ededf0;
+}
+
+.stats-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f8f8fa;
+}
+
+.stats-table .row-header {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: #ffffff;
+  padding: 0 12px;
+  text-align: left;
+}
+
+.stats-table thead .corner-cell {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  width: 150px;
+  min-width: 150px;
+  max-width: 150px;
+  background: #f8f8fa;
+}
+
+.stats-col-header {
+  width: 96px;
+  min-width: 96px;
+  max-width: 96px;
+  height: 44px;
+  padding: 0 10px;
+  color: #52525b;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.stats-cell {
+  width: 96px;
+  min-width: 96px;
+  max-width: 96px;
+  height: 38px;
+  padding: 0 10px;
+  color: #111114;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.72rem;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.stats-table tbody tr:hover .row-header,
+.stats-table tbody tr:hover .stats-cell {
+  background: #f8f8fa;
+}
