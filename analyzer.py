@@ -17,7 +17,7 @@ def heatmap(file_path: str):
     columns = prep["columns"]
     column_types = prep["column_types"]
     numeric_data = prep["numeric_data"]
-    categorical_data = prep["categorical_data"]
+    categoric_data = prep["categoric_data"]
     skipped_cols = prep["skipped_cols"]
 
     n = len(columns)
@@ -40,15 +40,13 @@ def heatmap(file_path: str):
                 value = spearman(numeric_data[var_i], numeric_data[var_j])
 
             elif type_i == "numeric" and type_j == "categorical":
-                value = eta(categorical_data[var_j], numeric_data[var_i])
+                value = eta(categoric_data[var_j], numeric_data[var_i])
 
             elif type_i == "categorical" and type_j == "numeric":
-                print("x", var_i, categorical_data[var_i])
-                print("y", var_j, numeric_data[var_j])
-                value = eta(categorical_data[var_i], numeric_data[var_j])
+                value = eta(categoric_data[var_i], numeric_data[var_j])
 
             elif type_i == "categorical" and type_j == "categorical":
-                value = cramers_v(categorical_data[var_i], categorical_data[var_j])
+                value = cramers_v(categoric_data[var_i], categoric_data[var_j])
 
             else:
                 value = np.nan
@@ -60,54 +58,60 @@ def heatmap(file_path: str):
     return correlation_matrix, columns, values
 
 
-def stats_table(file_path: str):
+def numerical_stats_table(file_path: str):
     """
-    Output: summary table of descriptive statistics for each (numerical) variable
+    Output: summary table of descriptive statistics for each numerical variable
     """
-
     print("Stats Table for file:", file_path)
     print("Step 1: Loading data...")
     df = pd.read_csv(file_path)
+    prep = prepare_frame(df)
 
     print("Step 2: Preprocessing...")
-    # again, segregate the numeric and non-numeric
-    df_numeric = df.select_dtypes(include=[np.number]).copy()
-    df_catagoric = df.select_dtypes(exclude=[np.number]).copy()
+    columns = prep["columns"]
+    numeric_cols = prep["numeric_cols"]
+    numeric_data = prep["numeric_data"]
 
-    print("Step 3: Calculating Statistics Table...")
-    def ptp(x: pd.Series): return x.max() - x.min()
-    def p10(x: pd.Series): return x.quantile(0.10)
-    def p25(x: pd.Series): return x.quantile(0.25)
-    def p75(x: pd.Series): return x.quantile(0.75)
-    def p90(x: pd.Series): return x.quantile(0.90)
-    def mode(x: pd.Series): return x.mode()[0]
-    stats_matrix = df_numeric.agg(
-        [
-            "count",
-            "mean",
-            "var",
-            "std",
-            ptp,
-            "min",
-            p10,
-            p25,
-            "median",
-            p75,
-            p90,
-            "max",
-            "skew",
-            "kurt"
-        ]
-    )
-    columns = stats_matrix.columns.tolist()
-    values = [[safe_float(v) for v in row] for row in stats_matrix.values.tolist()]
+    print("Step 3: Calculating Numerical Statistics Table...")
+    q = numeric_data.quantile([0.10, 0.25, 0.75, 0.90])
+    stats_matrix= pd.DataFrame()
+    stats_matrix["count"] = numeric_data.count().astype(int)
+    stats_matrix["mean"] = numeric_data.mean()
+    stats_matrix["var"] = numeric_data.var()
+    stats_matrix["std dev"] = numeric_data.std()
+    stats_matrix["range"] = numeric_data.max() - numeric_data.min()
+    stats_matrix["min"] = numeric_data.min()
+    stats_matrix["p10"] = q.loc[0.10]
+    stats_matrix["p25"] = q.loc[0.25]
+    stats_matrix["median"] = numeric_data.median()
+    stats_matrix["p75"] = q.loc[0.75]
+    stats_matrix["p90"] = q.loc[0.90]
+    stats_matrix["max"] = numeric_data.max()
+    stats_matrix["skew"] = numeric_data.skew()
+    stats_matrix["kurt"] = numeric_data.kurt()
 
     print("Step 4: Returning Statistics Table...")
-    return (stats_matrix, columns, values)
+    values = [[safe_float(v) for v in row] for row in stats_matrix.transpose().to_numpy().tolist()]
+    return stats_matrix, numeric_cols, values
 
+
+# def categorical_stats_table(file_path: str):
+#     """
+#     Output: summary table of descriptive statistics for each numerical variable
+#     """
+#     print("Stats Table for file:", file_path)
+#     print("Step 1: Loading data...")
+#     df = pd.read_csv(file_path)
+#     prep = prepare_frame(df)
+
+#     print("Step 2: Preprocessing")
+#     categoric_data = prep["categoric_data"]
+
+#     print("Step 3: Calculating Categorical Statistics Table...")
+#     return
 
 
 if __name__ == "__main__":
-    correlation_matrix, columns, values = heatmap("student_data.csv")
-    print(correlation_matrix)
-    # stats_table("healthcare.csv")
+    # correlation_matrix, columns, values = heatmap("student_data.csv")
+    # print(correlation_matrix)
+    numerical_stats_table("student_data.csv")

@@ -38,18 +38,18 @@ def is_identifier(series, name=None, unique_ratio_threshold=0.95):
     return unique_ratio >= unique_ratio_threshold
 
 
-def classify_columns(df, categoric_threshold=15, categoric_ratio=0.05):
-    numeric_cols = set()
-    categoric_cols = set()
-    skipped_cols = set()
+def classify_columns(df, categoric_threshold=5, categoric_ratio=0.05):
+    numeric_cols = []
+    categoric_cols = []
+    skipped_cols = []
 
     for col, s in df.items():
         if is_identifier(s, col):
-            skipped_cols.add(col)
+            skipped_cols.append(col)
             continue
 
         if is_bool_dtype(s):
-            categoric_cols.add(col)
+            categoric_cols.append(col)
             continue
 
         if is_numeric_dtype(s):
@@ -57,22 +57,22 @@ def classify_columns(df, categoric_threshold=15, categoric_ratio=0.05):
             # Heuristic: if values are often repeated, is maybe categorical
             n = s.notna().sum()
             if n == 0:
-                skipped_cols.add(col)
+                skipped_cols.append(col)
                 continue
 
             nunique = s.nunique(dropna=True)
             ratio = nunique / n
 
-            if nunique < categoric_threshold or ratio < categoric_ratio:
-                categoric_cols.add(col)
+            if nunique < categoric_threshold and ratio < categoric_ratio:
+                categoric_cols.append(col)
             else:
-                numeric_cols.add(col)
+                numeric_cols.append(col)
 
         elif is_categorical_dtype(s) or is_object_dtype(s) or is_string_dtype(s):
-            categoric_cols.add(col)
+            categoric_cols.append(col)
 
         else:
-            categoric_cols.add(col)
+            categoric_cols.append(col)
 
     return numeric_cols, categoric_cols, skipped_cols
 
@@ -94,8 +94,6 @@ def eta(x, y) -> float:
     # IMPORTANT: assumes x is categorical, and y is numerical
     x = pd.Series(x, copy=False)
     y = pd.to_numeric(y, errors="coerce")
-    print("x=", x)
-    print("y=", y)
 
     mask = x.notna() & y.notna()
     if mask.sum() < 2:
@@ -166,15 +164,13 @@ def prepare_frame(df):
         else:
             column_types[col] = "categorical"
 
-    numeric_data = {
-        col: pd.to_numeric(df[col], errors="coerce")
-        for col in numeric_cols
-    }
+    numeric_data = pd.DataFrame({
+        col: pd.to_numeric(df[col], errors="coerce") for col in numeric_cols
+    })
 
-    categorical_data = {
-        col: df[col]
-        for col in categoric_cols
-    }
+    categoric_data = pd.DataFrame({
+        col: df[col] for col in categoric_cols
+    })
 
     return {
         "columns": df.columns.tolist(),
@@ -183,7 +179,7 @@ def prepare_frame(df):
         "categoric_cols": categoric_cols,
         "skipped_cols": skipped_cols,
         "numeric_data": numeric_data,
-        "categorical_data": categorical_data,
+        "categoric_data": categoric_data,
         "df": df,
     }
 

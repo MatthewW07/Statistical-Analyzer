@@ -406,7 +406,7 @@ function openHeatCellDetail(cell, value) {
     eyebrow.textContent = "Two-variable analysis";
 
     const title = document.createElement("h4");
-    title.textContent = `${cell.dataset.row} x ${cell.dataset.column}`;
+    title.textContent = `${cell.dataset.row} vs. ${cell.dataset.column}`;
 
     const coefficient = document.createElement("div");
     coefficient.className = "heat-detail-coefficient";
