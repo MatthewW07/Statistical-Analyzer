@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from visualizer import main as build_graph
-from analyzer import heatmap, stats_table
+from analyzer import heatmap, numerical_stats_table
 from graph_utils import two_variable
 
 
@@ -80,16 +80,16 @@ def analyze():
 
     # use the backend. upload to frontend. shtuff.
     correlation_matrix, heatmap_columns, heatmap_values = heatmap(input_path)
-    stats_matrix, stats_columns, stats_values = stats_table(input_path)
+    stats_matrix, stats_columns, stats_values = numerical_stats_table(input_path)
+    print(stats_columns)
 
     # prepare for JavaScript!!!
-    return jsonify(
-        {
-            "heatmapColumns": heatmap_columns, 
-            "heatmapValues": heatmap_values,
-            "statsColumns": stats_columns,
-            "statsValues": stats_values,
-        })
+    return jsonify({
+        "heatmapColumns": heatmap_columns, 
+        "heatmapValues": heatmap_values,
+        "statsColumns": stats_columns,
+        "statsValues": stats_values,
+    })
 
 
 @app.route("/plot", methods=["POST"])

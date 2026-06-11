@@ -22,9 +22,15 @@ def _pair_count(a, b):
     return int((pd.notna(a) & pd.notna(b)).sum())
 
 
-def _finalize(fig, title, x_title=None, y_title=None):
+def _finalize(fig, x_title=None, y_title=None):
     fig.update_layout(
-        title=title,
+        title=dict(
+            text=f"{y_title} vs. {x_title}",
+            y=0.96,
+            x=0.5,
+            xanchor="right",
+            yanchor="top",
+        ),
         height=500,
         margin={"l": 50, "r": 50, "t": 70, "b": 50},
         hovermode="closest",
@@ -95,7 +101,7 @@ def _numeric_same_variable(x, col_name):
             args=[
                 {"visible": [True, False, False]},
                 {
-                    "title": f"{col_name}",
+                    "title": f"Histogram: {col_name}",
                     "xaxis": {"title": col_name, "visible": True},
                     "yaxis": {"title": "Count", "visible": True},
                 },
@@ -107,7 +113,7 @@ def _numeric_same_variable(x, col_name):
             args=[
                 {"visible": [False, True, False]},
                 {
-                    "title": f"{col_name}",
+                    "title": f"Box Plot: {col_name}",
                     "xaxis": {"title": "", "visible": False},
                     "yaxis": {"title": col_name, "visible": True},
                 },
@@ -119,7 +125,7 @@ def _numeric_same_variable(x, col_name):
             args=[
                 {"visible": [False, False, True]},
                 {
-                    "title": f"{col_name}",
+                    "title": f"Violin Plot: {col_name}",
                     "xaxis": {"title": "", "visible": False},
                     "yaxis": {"title": col_name, "visible": True},
                 },
@@ -128,7 +134,7 @@ def _numeric_same_variable(x, col_name):
     ]
 
     _dropdown(fig, buttons, active=0)
-    _finalize(fig, f"{col_name}", x_title=col_name, y_title="Count")
+    _finalize(fig, x_title=col_name, y_title="Count")
     return count, fig
 
 
@@ -170,7 +176,7 @@ def _numeric_numeric(x, y, x_col, y_col):
             args=[
                 {"visible": [True, False]},
                 {
-                    "title": f"{y_col} vs {x_col}",
+                    "title": f"Scatter: {y_col} vs. {x_col}",
                     "xaxis": {"title": x_col},
                     "yaxis": {"title": y_col},
                 },
@@ -182,7 +188,7 @@ def _numeric_numeric(x, y, x_col, y_col):
             args=[
                 {"visible": [False, True]},
                 {
-                    "title": f"Density: {y_col} vs {x_col}",
+                    "title": f"Density: {y_col} vs. {x_col}",
                     "xaxis": {"title": x_col},
                     "yaxis": {"title": y_col},
                 },
@@ -191,7 +197,7 @@ def _numeric_numeric(x, y, x_col, y_col):
     ]
 
     _dropdown(fig, buttons, active=0)
-    _finalize(fig, f"{y_col} vs {x_col}", x_title=x_col, y_title=y_col)
+    _finalize(fig, x_title=x_col, y_title=y_col)
     return count, fig
 
 
@@ -247,7 +253,7 @@ def _numeric_categorical(cat, num, cat_col, num_col):
             args=[
                 {"visible": [True, False, False]},
                 {
-                    "title": f"{num_col} by {cat_col}",
+                    "title": f"Box Plot: {num_col} vs. {cat_col}",
                     "xaxis": {"title": cat_col, "categoryorder": "array", "categoryarray": order},
                     "yaxis": {"title": num_col},
                 },
@@ -259,7 +265,7 @@ def _numeric_categorical(cat, num, cat_col, num_col):
             args=[
                 {"visible": [False, True, False]},
                 {
-                    "title": f"{num_col} by {cat_col}",
+                    "title": f"Violin Plot: {num_col} vs. {cat_col}",
                     "xaxis": {"title": cat_col, "categoryorder": "array", "categoryarray": order},
                     "yaxis": {"title": num_col},
                 },
@@ -271,7 +277,7 @@ def _numeric_categorical(cat, num, cat_col, num_col):
             args=[
                 {"visible": [False, False, True]},
                 {
-                    "title": f"Mean {num_col} by {cat_col}",
+                    "title": f"Mean Bar: {num_col} vs. {cat_col}",
                     "xaxis": {"title": cat_col, "categoryorder": "array", "categoryarray": order},
                     "yaxis": {"title": f"Mean {num_col}"},
                 },
@@ -280,7 +286,7 @@ def _numeric_categorical(cat, num, cat_col, num_col):
     ]
 
     _dropdown(fig, buttons, active=0)
-    _finalize(fig, f"{num_col} by {cat_col}", x_title=cat_col, y_title=num_col)
+    _finalize(fig, x_title=cat_col, y_title=num_col)
     return count, fig
 
 
@@ -393,7 +399,13 @@ def _mosaic_categorical_categorical(x, y, x_col, y_col):
     fig.update_layout(
         shapes=shapes,
         annotations=annotations,
-        title=f"Mosaic: {y_col} vs {x_col}",
+        title=dict(
+            text=f"Mosaic: {y_col} vs. {x_col}",
+            y=0.96,
+            x=0.5,
+            xanchor="right",
+            yanchor="top",
+        ),
         xaxis={"visible": False, "range": [0, 1]},
         yaxis={"visible": False, "range": [0, 1]},
         height=500,
@@ -437,7 +449,8 @@ def two_variable(file_path: str, x_col: str, y_col: str):
                     )
                 ]
             )
-            _finalize(fig, f"{x_col}", x_title=x_col, y_title="Count")
+            print(x_col)
+            _finalize(fig, x_title=x_col, y_title="Count")
 
         figure = json.loads(fig.to_json())
         return x_col, y_col, count, figure
