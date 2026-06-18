@@ -26,8 +26,8 @@ def _finalize(fig, x_title=None, y_title=None):
     fig.update_layout(
         title=dict(
             text=f"{y_title} vs. {x_title}",
-            y=0.96,
-            x=0.5,
+            y=0.92,
+            x=0.8,
             xanchor="right",
             yanchor="top",
         ),
