@@ -1,5 +1,7 @@
 # Statistical Analysis Project
 
+## How to use:
+
 to use, clone the repo and download the required dependencies:
 
 `pip install pandas numpy flask scikit-learn scipy igraph`
@@ -17,6 +19,8 @@ it will give you:
 1. A heatmap / matrix of correlation values across numerical and categorical data for 2-variable analysis
 2. A bunch of 1-variable data for each numerical column (haven't added categorical analysis yet).
 
+## Heatmap:
+
 the correlations work as follows:
 
 - Numerical vs Numerical -> use Spearman's r
@@ -32,6 +36,7 @@ if you click on a cell in the heatmap, it will draw some graphs depending on the
 - Numerical vs Categorical -> Bar Chart and Violin Plot and some other thing
 - Categorical vs Categorical -> Mosaic Plot
 
+# Numerical Data Table
 for the 1-variable table of statistics (which only works for numerical data so far...), here's what it gives:
 
 1. Count
@@ -51,3 +56,14 @@ for the 1-variable table of statistics (which only works for numerical data so f
 
 the last two values are just things that Pandas can do so i added them but i don't know the statistical theory behind them lol.
 
+# TODO:
+
+I still want to make some improvements:
+1. Categorical data table
+2. Add Cramer's Unbiased V for the proper data
+3. Investigate other correlation types (Kendall's Tau, etc.)
+4. Make it look less HIDEOUS
+5. Add a dedicated Variable 1 vs. Variable 2 section that has more than just what each heatmap cell has
+    - like the other correlation types
+    - like bigger graphs and list descriptive stats for each variable
+    - stuff like that
