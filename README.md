@@ -1,43 +1,50 @@
-# Statistical Analysis Project
 
-## How to use:
+***
+# Statistics API Project (The Old Version)
+***
 
-to use, clone the repo and download the required dependencies:
+# Introduction
 
-`pip install pandas numpy flask scikit-learn scipy igraph`
+This codebase is my first attempt at making a statistical analysis API. I was mainly hoping for the project to have lots of ways to visualize the data, but it didn't end up being quite as good as I'd hoped. Still, I'll keep this repository alive and public, and I'll try to clean it up as well. This project includes:
 
-i think that's it and then those packages will install like 20 more because that's what they do.
+1. A Data Visualization tool
+2. A Heatmap
+3. A Numerical Data Table
 
-anyways if it works you can run
+***
+# Usage
 
-`flask --app app.py run`
+### Local Setup:
 
-and then go to the link it gives you (for me, 127.0.0.1:5500) and drag-and-drop a .csv file and then bam.
+1. Clone the API: `git clone https://github.com/Matthew07/Statistics-API` and `cd Statistics-API`
+2. Make virtual environment: `python -m venv venv` or `uv venv`
+3. Install dependencies `pip install -r requirements.txt` or `uv pip install -r requirements.txt`
+4. Start server `flask --app app.py run`
 
-it will give you:
+### Data Visualizer:
 
-1. A heatmap / matrix of correlation values across numerical and categorical data for 2-variable analysis
-2. A bunch of 1-variable data for each numerical column (haven't added categorical analysis yet).
+This tool is really not that cool - it just puts all observations in a graph and positions them by similarity. It's also really laggy and can't scale up well at all. If you try to use it, you might end up waiting for quite a bit.
 
-## Heatmap:
+### Heatmap:
 
-the correlations work as follows:
+The Heatmap is just an $n \times n$ grid with certain correlation values between all pairs of data. Because there can be *numerical* and *categorical* data, the default correlation statistics are:
 
-- Numerical vs Numerical -> use Spearman's r
-- Numerical vs Categorical -> use the Eta Coefficient
-- Categorical vs Categorical -> use Cramer's (biased) V
+1. *Numeric vs Numeric*: **Spearman's $r$**
+2. *Numeric vs Categoric*: **The Eta Coefficient**
+3. *Categoric vs Categoric*: **Cramer's Biased $V$**
 
-i still have yet to add more correlation analysis, like making Cramer's V unbiased unless it is Binary vs Binary categorical data.
+I still have yet to add more correlation analysis, like making Cramer's V unbiased unless it is Binary vs Binary categorical data. 
 
-if you click on a cell in the heatmap, it will draw some graphs depending on the type of data
+One good feature with this old API is that when you click on a cell in the Heatmap, it will create graphs for the data depending on what type of cell it is:
 
-- On the Diagonal (one variable) -> draws a histogram for the variable
-- Numerical vs Numerical -> probably a Scatterplot and Density Plot
-- Numerical vs Categorical -> Bar Chart and Violin Plot and some other thing
-- Categorical vs Categorical -> Mosaic Plot
+- *On the Diagonal (one variable)* -> **Histogram**
+- *Numeric vs Numeric* -> **Scatterplot** and **Density Plot**
+- *Numeric vs Categoric* -> **Bar Chart** and **Violin Plot**
+- *Categoric vs Categoric* -> **Mosaic Plot**
 
-# Numerical Data Table
-for the 1-variable table of statistics (which only works for numerical data so far...), here's what it gives:
+### Numerical Data Table:
+
+For all numerical variables, the following statistics will be computed:
 
 1. Count
 2. Mean
@@ -54,16 +61,16 @@ for the 1-variable table of statistics (which only works for numerical data so f
 13. Skewness (idk)
 14. Kurtois (idk)
 
-the last two values are just things that Pandas can do so i added them but i don't know the statistical theory behind them lol.
+***
+# Future Improvements
 
-# TODO:
+### Categorical Data Table
 
-I still want to make some improvements:
-1. Categorical data table
-2. Add Cramer's Unbiased V for the proper data
-3. Investigate other correlation types (Kendall's Tau, etc.)
-4. Make it look less HIDEOUS
-5. Add a dedicated Variable 1 vs. Variable 2 section that has more than just what each heatmap cell has
-    - like the other correlation types
-    - like bigger graphs and list descriptive stats for each variable
-    - stuff like that
+There's one for the *numerical* variables, but not for the *categorical* variables. 
+
+### Other Statistics:
+
+Adding more correlations like *Kendall's Tau* would be helpful.
+
+***
+## The End!

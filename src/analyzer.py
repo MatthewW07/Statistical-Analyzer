@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from stats_utils import *
+from src.stats_utils import *
 
 
 def heatmap(file_path: str):

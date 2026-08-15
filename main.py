@@ -1,9 +1,9 @@
 import os
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
-from visualizer import main as build_graph
-from analyzer import heatmap, numerical_stats_table
-from graph_utils import two_variable
+from src.visualizer import main as build_graph
+from src.analyzer import heatmap, numerical_stats_table
+from src.graph_utils import two_variable
 
 
 app = Flask(__name__)

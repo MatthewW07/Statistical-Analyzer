@@ -1,2 +1,6 @@
 .venv
 desktop.ini
+/uploads/
+/outputs/
+*/__pycache__/*
+/lib/

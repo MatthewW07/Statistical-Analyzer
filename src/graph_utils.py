@@ -3,7 +3,6 @@ import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from pandas.api.types import is_numeric_dtype
-from scipy.stats import spearmanr
 import math
 import json
 
